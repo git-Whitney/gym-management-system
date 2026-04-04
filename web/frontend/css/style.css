@@ -1,7 +1,9 @@
 body {
+    
     font-family: Arial;
     background-color: #f4f4f4;
     text-align: center;
+    
 }
 
 form {
@@ -28,4 +30,5 @@ button {
 div {
     margin: 20px;
 }
+
 
