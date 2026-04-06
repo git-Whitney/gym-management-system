@@ -1,4 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="java.util.*" %>
+<%
+String success = request.getParameter("success");
+String error = request.getParameter("error");
+
+if ("1".equals(success)) {
+%>
+    <p style="color:green;">Booking successful!</p>
+<%
+} else if ("full".equals(error)) {
+%>
+    <p style="color:red;">Session is full!</p>
+<%
+}
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,16 +25,37 @@
 
    <h2>Book a Session</h2>
 
-<form action="BookingServlet" method="post">
-    <label>Select Session:</label>
-    <select name="session_id">
-        <option value="1">Morning</option>
-        <option value="2">Afternoon</option>
-        <option value="3">Evening</option>
-    </select><br><br>
+<%
+List<Map<String, String>> sessions = 
+    (List<Map<String, String>>) request.getAttribute("sessions");
 
-    <button type="submit">Book</button>
+if (sessions != null) {
+    for (Map<String, String> s : sessions) {
+        int booked = Integer.parseInt(s.get("booked"));
+        int capacity = Integer.parseInt(s.get("capacity"));
+
+        if (booked < capacity) {
+%>
+
+<form action="${pageContext.request.contextPath}/BookServlet" method="post">
+    <input type="hidden" name="session_id" value="<%= s.get("id") %>">
+    
+    <button type="submit" class="card">
+        <%= s.get("time") %> ( <%= booked %>/<%= capacity %> )
+    </button>
 </form>
-    <script src="js/script.js"></script>
-</body>
+
+<%
+        } else {
+%>
+
+<button class="card" disabled>
+    <%= s.get("time") %> (FULL)
+</button>
+
+<%
+        }
+    }
+}
+%>
 </html>
