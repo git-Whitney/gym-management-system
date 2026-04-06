@@ -6,6 +6,9 @@ package com.gym.system;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import javax.servlet.http.HttpSession;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,19 +28,41 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String email = request.getParameter("email");
-        String password = request.getParameter("password");
+        String regNo = request.getParameter("regNo");
 
-        // TEMP LOGIN (replace with DB later)
-        if(email.equals("admin@gmail.com") && password.equals("1234")) {
+        try {
+            Connection conn = DBConnection.getConnection();
 
-            HttpSession session = request.getSession();
-            session.setAttribute("user", email);
+            String sql = "SELECT * FROM Member WHERE email=? AND registration_number=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
 
-            response.sendRedirect("admin.jsp");
+            ps.setString(1, email);
+            ps.setString(2, regNo);
 
-        } else {
-            request.setAttribute("error", "Invalid login details");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                // ✅ USER FOUND
+
+                HttpSession session = request.getSession();
+                session.setAttribute("name", rs.getString("name"));
+
+                // 🔥 REDIRECT TO DASHBOARD
+                response.sendRedirect("frontend/dashboard.jsp");
+
+            } else {
+                // ❌ USER NOT FOUND
+
+                request.setAttribute("error", "Invalid login details");
+                request.getRequestDispatcher("frontend/login.jsp").forward(request, response);
+            }
+
+            rs.close();
+            ps.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Payment page</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/GymManagementSystem2/frontend/css/style2.css">
 </head>
     <body>
        <h2>Record Payment</h2>

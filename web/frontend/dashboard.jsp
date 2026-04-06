@@ -1,20 +1,38 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+
+<%
+    String name = (String) session.getAttribute("name");
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard page</title>
+    <title>Dashboard</title>
 
-    
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/frontend/css/style2.css">
 </head>
 <body>
-<h2>Dashboard</h2>
+<div class="dashboard-container">
 
-<a href="booking.jsp">Book Session</a><br><br>
-<a href="payment.jsp">Make Payment</a><br><br>
+    <h2>Welcome, <%= name != null ? name : "User" %></h2>
 
-<p>Welcome, <%= session.getAttribute("user") %></p>
-    
-    <script src="js/script.js"></script>
+    <!-- BOOK SESSION -->
+    <a href="booking.jsp" class="card">
+        Book Session
+    </a>
+
+    <!-- MAKE PAYMENT -->
+    <a href="payment.jsp" class="card">
+        Make Payment
+    </a>
+
+    <!-- VIEW PROFILE -->
+    <a href="profile.jsp" class="card">
+        View Profile
+    </a>
+
+
+</div>
+<script src="${pageContext.request.contextPath}/frontend/js/script.js"></script>
 </body>
 </html>
