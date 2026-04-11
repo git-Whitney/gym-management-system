@@ -18,6 +18,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 @WebServlet(name = "LoadSessions", urlPatterns = {"/LoadSessions"})
@@ -31,24 +32,46 @@ public class LoadSessions extends HttpServlet {
          try {
             Connection conn = DBConnection.getConnection();
 
+           
+            // 🔐 Get logged-in user
+            HttpSession session = request.getSession();
+            Integer userId = (Integer) session.getAttribute("user_id");
+            if (userId == null) {
+                response.sendRedirect("frontend/dashboard.jsp");
+                return;
+            }
+             // 💳 CHECK IF USER HAS PAID THIS SEMESTER
+            String checkPaymentSql = "SELECT * FROM payment WHERE user_id=? AND semester=?";
+            PreparedStatement checkPs = conn.prepareStatement(checkPaymentSql);
+            checkPs.setInt(1, userId);
+            checkPs.setString(2, "2026-Sem1");
+            ResultSet paymentRs = checkPs.executeQuery();
+
+            //if (!paymentRs.next()) {
+                // ❌ NOT PAID → redirect to payment page
+            //    response.sendRedirect(request.getContextPath() + "/frontend/payment.jsp");
+            //    return;
+           // }
+             // ✅ PAID → load sessions
             String sql = "SELECT * FROM gymsession";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-
+            
             List<Map<String, String>> sessions = new ArrayList<>();
 
-            while (rs.next()) {
-                Map<String, String> session = new HashMap<>();
-                session.put("id", rs.getString("session_id"));
-                session.put("time", rs.getString("session_time"));
-                session.put("booked", rs.getString("booked_count"));
-                session.put("capacity", rs.getString("max_capacity"));
 
-                sessions.add(session);
+            while (rs.next()) {
+                Map<String, String> sessionData = new HashMap<>();
+                sessionData.put("id", rs.getString("session_id"));
+                sessionData.put("time", rs.getString("session_time"));
+                sessionData.put("booked", rs.getString("booked_count"));
+                sessionData.put("capacity", rs.getString("max_capacity"));
+
+                sessions.add(sessionData);
             }
 
             request.setAttribute("sessions", sessions);
-            request.getRequestDispatcher("frontend/booking.jsp").forward(request, response);
+            request.getRequestDispatcher("/frontend/booking.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();

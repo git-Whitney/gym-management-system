@@ -29,6 +29,8 @@ public class LoginServlet extends HttpServlet {
 
         String email = request.getParameter("email");
         String regNo = request.getParameter("regNo");
+        
+        response.getWriter().println("LOGIN WORKING");
 
         try {
             Connection conn = DBConnection.getConnection();
@@ -43,18 +45,20 @@ public class LoginServlet extends HttpServlet {
 
             if (rs.next()) {
                 // ✅ USER FOUND
-
+            int userId = rs.getInt("member_id");
                 HttpSession session = request.getSession();
+                session.setAttribute("user_id", userId);
                 session.setAttribute("name", rs.getString("name"));
-
+                System.out.println("LOGIN SUCCESS");
                 // 🔥 REDIRECT TO DASHBOARD
-                response.sendRedirect("frontend/dashboard.jsp");
+                //response.sendRedirect("LoadSessions");
+               response.sendRedirect(request.getContextPath() + "/frontend/dashboard.jsp");
 
             } else {
                 // ❌ USER NOT FOUND
 
                 request.setAttribute("error", "Invalid login details");
-                request.getRequestDispatcher("frontend/login.jsp").forward(request, response);
+                request.getRequestDispatcher("frontend/dashboard.jsp").forward(request, response);
             }
 
             rs.close();
@@ -63,6 +67,7 @@ public class LoginServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
+             response.sendRedirect("frontend/login.jsp?error=server");
         }
     }
 }

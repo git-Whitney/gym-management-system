@@ -1,24 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Payment page</title>
-    <link rel="stylesheet" href="/GymManagementSystem2/frontend/css/style2.css">
+    <title>Payment Page</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/frontend/css/style2.css">
 </head>
-    <body>
-       <h2>Record Payment</h2>
+<body>
+    <div class="container">
+<form action="${pageContext.request.contextPath}/PaymentServlet" method="post">
 
-<form action="PaymentServlet" method="post">
-    <input type="text" name="member_id" placeholder="Member ID" required><br><br>
+    <input type="hidden" name="session_id" value="<%= request.getParameter("session_id") %>">
 
-    <input type="number" name="amount" placeholder="Amount" required><br><br>
+    <label>Enter Amount:</label>
+    <input type="number" name="amount" required>
 
-    <select name="payment_type">
-        <option value="membership">Membership</option>
-        <option value="walk-in">Walk-in</option>
-    </select><br><br>
-
-    <button type="submit">Record Payment</button>
+    <button type="submit">Pay</button>
 </form>
-       <script src="js/script.js"></script>
-    </body>
+    </div>
+</body>
 </html>

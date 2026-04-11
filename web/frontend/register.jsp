@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="/GymManagementSystem2/frontend/css/style2.css">
 </head>
 <body>
+    <div class="container">
+        <div class="glass-card">
 <%
    String message = (String) session.getAttribute("message");
     if (message != null) {
@@ -31,8 +33,9 @@
     <button type="submit">Register</button>
 </form>
 <p>Already have an account?</p>
-<a href="login.jsp">Login here</a>
-    
+<a class="login_here_link" href="login.jsp">Login here</a>
+        </div>
+    </div>
    <script src="/GymManagementSystem2/frontend/js/script.js"></script>
 </body>
 </html>

@@ -12,12 +12,12 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/frontend/css/style2.css">
 </head>
 <body>
-<div class="dashboard-container">
-
+<div class="container">
+  <div class="glass-card">
     <h2>Welcome, <%= name != null ? name : "User" %></h2>
 
     <!-- BOOK SESSION -->
-    <a href="booking.jsp" class="card">
+    <a  href="${pageContext.request.contextPath}/LoadSessions" class="card">
         Book Session
     </a>
 
@@ -31,7 +31,7 @@
         View Profile
     </a>
 
-
+  </div>
 </div>
 <script src="${pageContext.request.contextPath}/frontend/js/script.js"></script>
 </body>
