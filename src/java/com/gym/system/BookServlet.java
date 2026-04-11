@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 
 public class BookServlet extends HttpServlet {
 
-    
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
        int sessionId = Integer.parseInt(request.getParameter("session_id"));
        System.out.println("Booking session ID: " + sessionId);
@@ -45,13 +45,13 @@ Connection conn = null;
 
         } catch (Exception e) {
             e.printStackTrace();
+             response.sendRedirect("LoadSessions?error=fail");
         }finally {
     DBConnection.closeConnection(conn); // ✅ IMPORTANT
-}
+        }
     }
-    @Override
-protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    processRequest(request, response);
 }
-}
+
+
+
+   

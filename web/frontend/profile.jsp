@@ -1,40 +1,48 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%-- 
+    Document   : profile
+    Created on : Apr 11, 2026, 7:46:57 PM
+    Author     : san
+--%>
 
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%
     String name = (String) session.getAttribute("name");
+    String email = (String) session.getAttribute("email"); // if you store it
 %>
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
-
+    <title>Profile</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/frontend/css/style2.css">
 </head>
+
 <body>
+
 <div class="container">
-  <div class="glass-card">
-    <h2>Hey, <%= name != null ? name : "User" %> 👋</h2>
+<div class="glass-card">
 
-    <!-- BOOK SESSION -->
-    <a  href="${pageContext.request.contextPath}/LoadSessions" class="card">
-        🏋️ Book Session
-    </a>
+    <h2>👤 My Profile</h2>
 
-    <!-- MAKE PAYMENT -->
-    <a href="payment.jsp" class="card">
-        💳 Make Payment
-    </a>
+    <div class="profile-card">
 
-    <!-- VIEW PROFILE -->
-    <a href="profile.jsp" class="card">
-        👤 View Profile
-    </a>
+        <p><strong>Name:</strong> <%= name != null ? name : "User" %></p>
 
-  </div>
+        <p><strong>Email:</strong> <%= email != null ? email : "Not set" %></p>
+
+        <p><strong>Status:</strong> Active Member 💪</p>
+
+        <p><strong>Member since:</strong> 2026</p>
+
+    </div>
+
+    <a href="editProfile.jsp" class="card">✏️ Edit Profile</a>
+
+    <a href="logout.jsp" class="card">🚪 Logout</a>
+
 </div>
-<script src="${pageContext.request.contextPath}/frontend/js/script.js"></script>
-<div class="bottom-nav">
+</div>
+
+        <div class="bottom-nav">
 
     <a href="${pageContext.request.contextPath}/frontend/dashboard.jsp" class="nav-item">
         <span>🏠</span>
@@ -61,5 +69,5 @@
     </a>
 
 </div>
-</body>
+    </body>
 </html>

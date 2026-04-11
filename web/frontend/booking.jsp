@@ -2,31 +2,10 @@
 <%@ page import="java.util.*" %>
 <%
 String payment = request.getParameter("payment");
-
-if ("success".equals(payment)) {
-%>
-    <p style="color:green;">Payment successful!</p>
-<%
-} else if ("fail".equals(payment)) {
-%>
-    <p style="color:red;">Payment failed!</p>
-<%
-}
-%>
-<%
 String success = request.getParameter("success");
 String error = request.getParameter("error");
+%>
 
-if ("1".equals(success)) {
-%>
-    <p style="color:green;">Booking successful!</p>
-<%
-} else if ("full".equals(error)) {
-%>
-    <p style="color:red;">Session is full!</p>
-<%
-}
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,7 +16,19 @@ if ("1".equals(success)) {
 </head>
 <body>
 <div class="container">
+    <div class="glass-card">
    <h2>Book a Session</h2>
+   <% if ("success".equals(payment)) { %>
+    <div class="alert success">Payment successful!</div>
+<% } else if ("fail".equals(payment)) { %>
+    <div class="alert error">Payment failed!</div>
+<% } %>
+
+<% if ("1".equals(success)) { %>
+    <div class="alert success">Booking successful!</div>
+<% } else if ("full".equals(error)) { %>
+    <div class="alert error">Session is full!</div>
+<% } %>
 
 <%
 List<Map<String, String>> sessions = 
@@ -60,7 +51,8 @@ if (sessions == null) {
     <input type="hidden" name="session_id" value="<%= s.get("id") %>">
     
     <button type="submit" class="card">
-        <%= s.get("time") %> ( <%= booked %>/<%= capacity %> )
+        <span>🕒 <%= s.get("time") %></span>
+    <span><%= booked %>/<%= capacity %></span>
     </button>
 </form>
 
@@ -69,7 +61,8 @@ if (sessions == null) {
 %>
 
 <button class="card" disabled>
-    <%= s.get("time") %> (FULL)
+     <span>🕒 <%= s.get("time") %></span>
+    <span>FULL</span>
 </button>
 
 <%
@@ -77,6 +70,34 @@ if (sessions == null) {
     }
 }
 %>
+    </div>
+</div>
+    <div class="bottom-nav">
+
+    <a href="${pageContext.request.contextPath}/frontend/dashboard.jsp" class="nav-item">
+        <span>🏠</span>
+        <small>Home</small>
+    </a>
+
+    <a href="${pageContext.request.contextPath}/LoadSessions" class="nav-item">
+        <span>📅</span>
+        <small>Booking</small>
+    </a>
+        <a href="${pageContext.request.contextPath}/frontend/mybookings.jsp" class="nav-item">
+        <span>📋</span>
+        <small>My Bookings</small>
+    </a>
+
+    <a href="${pageContext.request.contextPath}/frontend/payment.jsp" class="nav-item">
+        <span>💳</span>
+        <small>Payment</small>
+    </a>
+
+    <a href="${pageContext.request.contextPath}/frontend/profile.jsp" class="nav-item">
+        <span>👤</span>
+        <small>Profile</small>
+    </a>
+
 </div>
 </body>
 </html>
