@@ -14,21 +14,21 @@
 <body>
 <div class="container">
   <div class="glass-card">
-    <h2>Welcome, <%= name != null ? name : "User" %></h2>
+    <h2>Hey, <%= name != null ? name : "User" %> 👋</h2>
 
     <!-- BOOK SESSION -->
     <a  href="${pageContext.request.contextPath}/LoadSessions" class="card">
-        Book Session
+        🏋️ Book Session
     </a>
 
     <!-- MAKE PAYMENT -->
     <a href="payment.jsp" class="card">
-        Make Payment
+        💳 Make Payment
     </a>
 
     <!-- VIEW PROFILE -->
     <a href="profile.jsp" class="card">
-        View Profile
+        👤 View Profile
     </a>
 
   </div>
