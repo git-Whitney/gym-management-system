@@ -64,8 +64,21 @@ public class LoadSessions extends HttpServlet {
                 Map<String, String> sessionData = new HashMap<>();
                 sessionData.put("id", rs.getString("session_id"));
                 sessionData.put("time", rs.getString("session_time"));
-                sessionData.put("booked", rs.getString("booked_count"));
                 sessionData.put("capacity", rs.getString("max_capacity"));
+                
+                String countSql =
+    "SELECT COUNT(*) FROM booking " +
+    "WHERE session_id=? AND DATE(booking_date)=CURDATE()";
+
+PreparedStatement countPs = conn.prepareStatement(countSql);
+countPs.setString(1, rs.getString("session_id"));
+
+ResultSet countRs = countPs.executeQuery();
+countRs.next();
+
+int bookedToday = countRs.getInt(1);
+
+sessionData.put("booked", String.valueOf(bookedToday));
 
                 sessions.add(sessionData);
             }

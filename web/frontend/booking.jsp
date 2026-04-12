@@ -29,6 +29,9 @@ String error = request.getParameter("error");
 <% } else if ("full".equals(error)) { %>
     <div class="alert error">Session is full!</div>
 <% } %>
+<% if ("already".equals(error)) { %>
+    <div class="alert error">You already booked this session today!</div>
+<% } %>
 
 <%
 List<Map<String, String>> sessions = 
