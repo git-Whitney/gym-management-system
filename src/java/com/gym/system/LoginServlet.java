@@ -27,10 +27,10 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String email = request.getParameter("email");
-        String regNo = request.getParameter("regNo");
+        String email = request.getParameter("email").trim();
+        String regNo = request.getParameter("regNo").trim();
         
-        response.getWriter().println("LOGIN WORKING");
+       
 
         try {
             Connection conn = DBConnection.getConnection();
@@ -57,8 +57,8 @@ public class LoginServlet extends HttpServlet {
             } else {
                 // ❌ USER NOT FOUND
 
-                request.setAttribute("error", "Invalid login details");
-                request.getRequestDispatcher("frontend/dashboard.jsp").forward(request, response);
+                request.setAttribute("error", "Invalid login details!");
+                request.getRequestDispatcher("frontend/login.jsp").forward(request, response);
             }
 
             rs.close();

@@ -165,6 +165,14 @@ div {
 .login_here_link:hover{
     color:orange;
 }
+.error {
+    color:red !important;
+    padding: 8px;
+    border-radius: 6px;
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
 .alert {
     width: 100%;
     padding: 12px;
