@@ -14,6 +14,9 @@ List<Map<String, String>> bookings =
 </head>
 
 <body>
+    <% if (bookings == null) { %>
+    <p style="color:red;">NO DATA RECEIVED FROM SERVLET</p>
+<% } %>
 <div style="margin-top:10px; padding:6px; background:#00c6ff33; border-radius:8px;">
     🎟️ Show this at the gym entrance
 </div>
@@ -71,7 +74,7 @@ List<Map<String, String>> bookings =
         <small>Booking</small>
     </a>
 
-    <a href="${pageContext.request.contextPath}/frontend/mybookings.jsp" class="nav-item">
+    <a href="${pageContext.request.contextPath}/myBookings" class="nav-item">
         <span>📋</span>
         <small>My Bookings</small>
     </a>

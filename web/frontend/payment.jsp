@@ -27,7 +27,7 @@
         <span>?</span>
         <small>Booking</small>
     </a>
-        <a href="${pageContext.request.contextPath}/frontend/mybookings.jsp" class="nav-item">
+        <a href="${pageContext.request.contextPath}/myBookings" class="nav-item">
         <span>?</span>
         <small>My Bookings</small>
     </a>
