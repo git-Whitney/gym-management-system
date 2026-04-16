@@ -5,7 +5,15 @@
 List<Map<String, String>> bookings =
     (List<Map<String, String>>) request.getAttribute("bookings");
 %>
+<%
+String success = request.getParameter("success");
+%>
 
+<% if ("booked".equals(success)) { %>
+    <div class="alert success">
+        🎉 Booking successful! 
+    </div>
+<% } %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -53,6 +61,13 @@ List<Map<String, String>> bookings =
         <div class="booking-row">
             Status: <span class="status">CONFIRMED</span>
         </div>
+        <div class="booking-row">
+    💰 Paid: KES <%= b.get("amount") != null ? b.get("amount") : "0" %>
+</div>
+
+<div class="booking-row">
+    📡 Payment Status: <%= b.get("status") != null ? b.get("status") : "Not Paid" %>
+</div>
 
     </div>
 

@@ -53,10 +53,11 @@ if (userId == null) {
     return;
 }
 
-           String sql =
-    "SELECT b.booking_date, g.session_time, b.payment_status " +
+          String sql =
+    "SELECT b.booking_date, g.session_time, p.status AS payment_status, p.amount " +
     "FROM booking b " +
     "JOIN gymsession g ON b.session_id = g.session_id " +
+    "LEFT JOIN payment p ON b.member_id = p.user_id AND p.semester = '2026-Sem1' " +
     "WHERE b.member_id = ? " +
     "AND DATE(b.booking_date) = CURDATE() " +
     "ORDER BY b.booking_date DESC";

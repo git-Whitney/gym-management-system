@@ -4,6 +4,7 @@
  */
 package com.gym.system;
 
+import org.json.JSONObject;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,64 +20,56 @@ import javax.servlet.http.HttpSession;
 public class PaymentServlet extends HttpServlet {
 
    
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-System.out.println("This is running!");
-       
-        double amount = Double.parseDouble(request.getParameter("amount"));
-
-        Connection conn = null;
+        int amount = 300;
+        int userId = (int) request.getSession().getAttribute("user_id");
+        String phone = request.getParameter("phone");
+        System.out.println("📞 RAW PHONE: " + phone);
+        if (phone.startsWith("0")) {
+       phone = "254" + phone.substring(1);
+}     System.out.println("📞 FORMATTED PHONE: " + phone);
 
         try {
-           conn = DBConnection.getConnection();
+            Connection conn = DBConnection.getConnection();
+       String accessToken = MpesaAuth.getToken();
+       System.out.println("🔑 TOKEN: " + accessToken);
+        String json = MpesaSTKRequest.build(phone, amount);
+        System.out.println("📦 JSON REQUEST: " + json);
+        String result = MpesaClient.sendStkPush(json, accessToken);
+        System.out.println("📩 SAFARICOM RESPONSE: " + result);
+        // DB insert here
+           JSONObject res = new JSONObject(result);
 
-            // 🔐 Get logged-in user
-            HttpSession session = request.getSession();
-            Integer userId = (Integer) session.getAttribute("user_id");
+String checkoutRequestId = res.optString("CheckoutRequestID");
+String merchantRequestId = res.optString("MerchantRequestID");
+       
+            String sql = "INSERT INTO payment "
+        + "(amount, payment_date, semester, user_id, payment_method, "
+        + "transaction_code, status, phone, checkout_request_id, merchant_request_id) "
+        + "VALUES (?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            if (userId == null) {
-                response.sendRedirect("login.jsp");
-                return;
-            }
+PreparedStatement ps = conn.prepareStatement(sql);
 
-            String semester = "2026-Sem1";
+ps.setDouble(1, amount);
+ps.setString(2, "2026 SEM");
+ps.setInt(3, userId);
+ps.setString(4, "M-PESA");
 
-            // 🚫 CHECK IF USER ALREADY PAID
-            String checkSql = "SELECT * FROM payment WHERE user_id=? AND semester=?";
-            PreparedStatement checkPs = conn.prepareStatement(checkSql);
-            checkPs.setInt(1, userId);
-            checkPs.setString(2, semester);
+ps.setString(5, "PENDING"); // transaction_code
+ps.setString(6, "PENDING"); // status
+ps.setString(7, phone);
+ps.setString(8, checkoutRequestId);
+ps.setString(9, merchantRequestId);
+            
 
-            var rs = checkPs.executeQuery();
-
-            if (rs.next()) {
-                // Already paid
-                response.sendRedirect("LoadSessions?payment=already_paid");
-                return;
-            }
-
-            // 💳 INSERT PAYMENT
-            String sql = "INSERT INTO payment (user_id, semester, amount, status) VALUES (?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
-
-            ps.setInt(1, userId);
-            ps.setString(2, semester);
-            ps.setDouble(3, amount);
-            ps.setString(4, "PAID");
-
-            int rows = ps.executeUpdate();
-
-            if (rows > 0) {
-                System.out.println("🔥 Payment recorded successfully");
-                response.sendRedirect("LoadSessions?payment=success");
-            } else {
-                response.sendRedirect("LoadSessions?payment=fail");
-            }
+            ps.executeUpdate();
+            conn.close();
+             response.sendRedirect("frontend/payment.jsp?msg=check_phone");
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            DBConnection.closeConnection(conn);
+            response.sendRedirect("frontend/payment.jsp?error=fail");
         }
     }
 }

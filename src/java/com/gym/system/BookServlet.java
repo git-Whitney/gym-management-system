@@ -92,7 +92,7 @@ if (rs.next()) {
     insertPs.setInt(2, sessionId);
     insertPs.executeUpdate();
 
-    response.sendRedirect("LoadSessions?success=1");
+    response.sendRedirect("myBookings?success=booked");
            
         } catch (Exception e) {
             e.printStackTrace();

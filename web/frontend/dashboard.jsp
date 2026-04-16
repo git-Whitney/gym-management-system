@@ -30,6 +30,49 @@
     <a href="profile.jsp" class="card">
         👤 View Profile
     </a>
+    <div style="width:100%; margin-top:20px; text-align:left;">
+
+    <h3 style="color:white;">💳 Recent Payments</h3>
+
+    <%
+        java.util.List<com.gym.system.Payment> recentPayments =
+            (java.util.List<com.gym.system.Payment>) request.getAttribute("recentPayments");
+
+        if (recentPayments != null && !recentPayments.isEmpty()) {
+            for (com.gym.system.Payment p : recentPayments) {
+    %>
+
+    <div class="booking-card">
+        <div class="booking-row">
+            💰 Amount: <b><%= p.getAmount() %></b>
+        </div>
+
+        <div class="booking-row">
+            📅 Date: <%= p.getPaymentDate() %>
+        </div>
+
+        <div class="booking-row status">
+            Status: <%= p.getStatus() %>
+        </div>
+    </div>
+
+    <%
+            }
+        } else {
+    %>
+
+        <p style="color:white;">No payments yet.</p>
+
+    <%
+        }
+    %>
+
+    <a href="${pageContext.request.contextPath}/PaymentHistoryServlet"
+       class="card" style="margin-top:15px;">
+        View Full Payment History →
+    </a>
+
+</div>
 
   </div>
 </div>

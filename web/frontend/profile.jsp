@@ -37,7 +37,7 @@
 
     <a href="editProfile.jsp" class="card">✏️ Edit Profile</a>
 
-    <a href="logout.jsp" class="card">🚪 Logout</a>
+    <a href="${pageContext.request.contextPath}/frontend/login.jsp" class="card">🚪 Logout</a>
 
 </div>
 </div>
