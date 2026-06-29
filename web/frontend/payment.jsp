@@ -2,76 +2,62 @@
 <%@ page import="java.util.*" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Payment Page</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/frontend/css/style2.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Payment — FitZone</title>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/frontend/css/style3.css">
 </head>
-<body>
-    <div class="container">
-        
-<div class="glass-card">
-    <h2>💳 Payment </h2>
-    <!<!-- m-pesa payment form -->
-    <form action="${pageContext.request.contextPath}/stkpush" method="post">
+<body class="has-bg-image">
 
-        <input type="text" name="phone"
-               placeholder="Enter M-Pesa Number (2547XXXXXXXX)"
-               required>
+<%@ include file="nav.jsp" %>
 
-        <input type="hidden" name="amount" value="300">
+<div class="page-wrapper">
 
-        <button type="submit">Pay 300 KES via M-Pesa</button>
+  <div class="page-header">
+    <div class="greeting">Make a <span>Payment</span></div>
+    <div class="subtext">Secure M-Pesa payment — KES 300 per semester</div>
+  </div>
 
-    </form>
+  <div class="glass-card">
+    <h2>💳 M-Pesa Checkout</h2>
 
-    <hr style="width:100%; margin:15px 0; opacity:0.3;">
-    <!<!-- payment details -->
-
-    <c:if test="${payment != null}">
-
-        <p>💰 Amount: KES ${payment.amount}</p>
-        <p>📅 Semester: ${payment.semester}</p>
-        <p>📡 Status: ${payment.status}</p>
-        <p>🔖 Transaction: ${payment.transactionCode}</p>
-
-    </c:if>
-
-    <c:if test="${payment == null}">
-        <p>No payment found</p>
-    </c:if>
-
-</div>
-
+    <div style="background:rgba(0,198,255,0.08); border:1px solid rgba(0,198,255,0.2); border-radius:10px; padding:14px 16px; margin-bottom:20px; font-size:13px; color:rgba(255,255,255,0.75);">
+      📲 An STK push will be sent to your M-Pesa number. Enter your PIN to complete.
     </div>
-    <!<!-- bottom navigation -->
-    <div class="bottom-nav">
 
-    <a href="${pageContext.request.contextPath}/frontend/dashboard.jsp" class="nav-item">
-        <span>🏠</span>
-        <small>Home</small>
-    </a>
+    <form id="paymentForm" action="${pageContext.request.contextPath}/stkpush" method="post">
+      <div class="form-group">
+        <label>M-Pesa Phone Number</label>
+        <input id="mpesaPhone" class="form-input" type="tel" pattern="^254[17][0-9]{8}$" name="phone"
+               placeholder="2547XXXXXXXX" oninput="validatePhone(this.value)"required>
+        <span id="phoneError"></span>
+        <small class="error-message" id="mpesaError"></small>
+      </div>
+      <input type="hidden" name="amount" value="300">
+      <button type="submit" class="btn btn-primary">Pay KES 300 via M-Pesa 💚</button>
+    </form>
+  </div>
 
-    <a href="${pageContext.request.contextPath}/LoadSessions" class="nav-item">
-        <span>📅</span>
-        <small>Booking</small>
-    </a>
-        <a href="${pageContext.request.contextPath}/myBookings" class="nav-item">
-        <span>📋</span>
-        <small>My Bookings</small>
-    </a>
+  <!-- Last payment details -->
+  <c:if test="${payment != null}">
+    <div class="glass-card" style="margin-top:16px;">
+      <h2>Last Transaction</h2>
+      <div class="booking-card" style="margin:0;">
+        <div class="booking-row">💰 Amount: <b>KES ${payment.amount}</b></div>
+        <div class="booking-row">📅 Semester: ${payment.semester}</div>
+        <div class="booking-row">🔖 Code: ${payment.transactionCode}</div>
+        <div class="booking-row">📡 Status: <span class="status">${payment.status}</span></div>
+      </div>
+    </div>
+  </c:if>
 
-    <a href="${pageContext.request.contextPath}/frontend/payment.jsp" class="nav-item">
-        <span>💳</span>
-        <small>Payment</small>
-    </a>
-
-    <a href="${pageContext.request.contextPath}/frontend/profile.jsp" class="nav-item">
-        <span>👤</span>
-        <small>Profile</small>
-    </a>
+  <div style="text-align:center; margin-top:16px;">
+    <a href="${pageContext.request.contextPath}/PaymentHistoryServlet" class="link">View full payment history →</a>
+  </div>
 
 </div>
+<script src="${pageContext.request.contextPath}/frontend/js/script.js"></script>
 </body>
 </html>

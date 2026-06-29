@@ -15,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.MessageDigest;
 
 /**
  *
@@ -22,43 +23,70 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
+    
+    //same hash function as register
+     public String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashedBytes = md.digest(password.getBytes("UTF-8"));
 
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashedBytes) {
+                hexString.append(String.format("%02x", b));
+            }
+            return hexString.toString();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+     
+     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String email = request.getParameter("email").trim();
         String regNo = request.getParameter("regNo").trim();
+        String password = request.getParameter("password").trim();
         
-       
+       if (regNo == null || password == null) {
+            request.setAttribute("error", "Please fill all fields");
+            request.getRequestDispatcher("frontend/login.jsp").forward(request, response);
+            return;
+        }
+
+        String hashedPassword = hashPassword(password);
 
         try {
             Connection conn = DBConnection.getConnection();
 
-            String sql = "SELECT * FROM Member WHERE email=? AND registration_number=?";
+            String sql = "SELECT * FROM Member WHERE registration_number=? AND password=?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setString(1, email);
-            ps.setString(2, regNo);
+             ps.setString(1, regNo);
+            ps.setString(2, hashedPassword);
 
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                // ✅ USER FOUND
-            int userId = rs.getInt("member_id");
+                // USER FOUND
+             int userId = rs.getInt("member_id");
+
                 HttpSession session = request.getSession();
                 session.setAttribute("user_id", userId);
                 session.setAttribute("name", rs.getString("name"));
+                session.setMaxInactiveInterval(900); // 15 mins (better security)
+
                 System.out.println("LOGIN SUCCESS");
-                // 🔥 REDIRECT TO DASHBOARD
-                //response.sendRedirect("LoadSessions");
-               response.sendRedirect(request.getContextPath() + "/frontend/dashboard.jsp");
+
+                response.sendRedirect(request.getContextPath() + "/frontend/dashboard.jsp");
+
 
             } else {
-                // ❌ USER NOT FOUND
+                // USER NOT FOUND
 
-                request.setAttribute("error", "Invalid login details!");
+                request.setAttribute("error", "Invalid registration number or password!");
                 request.getRequestDispatcher("frontend/login.jsp").forward(request, response);
+            
             }
 
             rs.close();
@@ -67,7 +95,8 @@ public class LoginServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-             response.sendRedirect("frontend/login.jsp?error=server");
+             request.setAttribute("error", "Server error. Try again later.");
+            request.getRequestDispatcher("frontend/login.jsp").forward(request, response);
         }
     }
 }

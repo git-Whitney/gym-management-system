@@ -1,72 +1,77 @@
 <%@ page import="java.util.*, com.gym.system.Payment" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="java.util.*" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Payment History</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: center;
-        }
-
-        .SUCCESS { color: green; font-weight: bold; }
-        .FAILED { color: red; font-weight: bold; }
-        .PENDING { color: orange; font-weight: bold; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Payment History — FitZone</title>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/frontend/css/style3.css">
 </head>
+<body class="has-bg-image">
 
-<body>
-<div class="payment-container">
-<h2 class="class="payment-title"">💳 Payment History</h2>
+<%@ include file="nav.jsp" %>
 
-<table class="payment-table">
-    <tr>
-        <th>ID</th>
-        <th>Amount</th>
-        <th>Date</th>
-        <th>Semester</th>
-        <th>Phone</th>
-        <th>Method</th>
-        <th>Transaction Code</th>
-        <th>Status</th>
-    </tr>
+<div class="page-wrapper" style="max-width:720px;">
 
-<%
-    List<Payment> payments = (List<Payment>) request.getAttribute("payments");
+  <div class="page-header">
+    <div class="greeting">Payment <span>History</span></div>
+    <div class="subtext">All your transactions in one place</div>
+  </div>
 
-    if (payments != null) {
-        for (Payment p : payments) {
-%>
+  <div class="glass-card" style="padding:0; overflow:hidden;">
+    <div class="payment-table-wrapper">
+      <table class="payment-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Semester</th>
+            <th>Phone</th>
+            <th>Method</th>
+            <th>Txn Code</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%
+            List<Payment> payments = (List<Payment>) request.getAttribute("payments");
+            if (payments != null && !payments.isEmpty()) {
+              for (Payment p : payments) {
+          %>
+          <tr>
+            <td><%= p.getPaymentId() %></td>
+            <td><b>KES <%= p.getAmount() %></b></td>
+            <td><%= p.getPaymentDate() %></td>
+            <td><%= p.getSemester() %></td>
+            <td><%= p.getPhone() %></td>
+            <td><%= p.getPaymentMethod() %></td>
+            <td style="font-size:11px; font-family:monospace;"><%= p.getTransactionCode() %></td>
+            <td class="<%= p.getStatus() %>"><%= p.getStatus() %></td>
+          </tr>
+          <%
+              }
+            } else {
+          %>
+          <tr>
+            <td colspan="8" style="padding:30px; color:rgba(255,255,255,0.4); text-align:center;">
+              No payment records found.
+            </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<a href="${pageContext.request.contextPath}/DownloadPaymentPDFServlet"
+   class="btn btn-secondary">
 
-<tr>
-    <td><%= p.getPaymentId() %></td>
-    <td><%= p.getAmount() %></td>
-    <td><%= p.getPaymentDate() %></td>
-    <td><%= p.getSemester() %></td>
-    <td><%= p.getPhone() %></td>
-    <td><%= p.getPaymentMethod() %></td>
-    <td><%= p.getTransactionCode() %></td>
-    <td class="<%= p.getStatus() %>">
-        <%= p.getStatus() %>
-    </td>
-</tr>
+   📄 Download PDF
 
-<%
-        }
-    }
-%>
-
-</table>
+</a>
 </div>
+
 </body>
 </html>

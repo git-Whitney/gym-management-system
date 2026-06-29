@@ -1,73 +1,63 @@
-<%-- 
-    Document   : profile
-    Created on : Apr 11, 2026, 7:46:57 PM
-    Author     : san
---%>
-
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
-    String name = (String) session.getAttribute("name");
-    String email = (String) session.getAttribute("email"); // if you store it
+  String name  = (String) session.getAttribute("name");
+  String email = (String) session.getAttribute("email");
 %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Profile</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/frontend/css/style2.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile — FitZone</title>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/frontend/css/style3.css">
 </head>
+<body class="has-bg-image">
 
-<body>
+<%@ include file="nav.jsp" %>
 
-<div class="container">
-<div class="glass-card">
+<div class="page-wrapper">
 
-    <h2>👤 My Profile</h2>
+  <div class="page-header">
+    <div class="greeting">My <span>Profile</span></div>
+    <div class="subtext">Manage your account details</div>
+  </div>
 
-    <div class="profile-card">
+  <div class="glass-card" style="text-align:center;">
+    <div class="profile-avatar">💪</div>
 
-        <p><strong>Name:</strong> <%= name != null ? name : "User" %></p>
-
-        <p><strong>Email:</strong> <%= email != null ? email : "Not set" %></p>
-
-        <p><strong>Status:</strong> Active Member 💪</p>
-
-        <p><strong>Member since:</strong> 2026</p>
-
+    <div style="margin-bottom:20px;">
+      <h3 style="font-family:'Syne',sans-serif; font-size:20px; font-weight:700;">
+        <%= name != null ? name : "Athlete" %>
+      </h3>
+      <p class="text-muted"><%= email != null ? email : "No email set" %></p>
     </div>
 
-    <a href="editProfile.jsp" class="card">✏️ Edit Profile</a>
+    <div class="profile-info">
+      <div class="profile-row">
+        <span class="label">Status</span>
+        <span class="badge">Active Member ✅</span>
+      </div>
+      <div class="profile-row">
+        <span class="label">Member Since</span>
+        <span class="value">2026</span>
+      </div>
+      <div class="profile-row">
+        <span class="label">Plan</span>
+        <span class="value">Monthly</span>
+      </div>
+    </div>
+  </div>
 
-    <a href="${pageContext.request.contextPath}/frontend/login.jsp" class="card">🚪 Logout</a>
+  <a href="editProfile.jsp" class="btn btn-secondary" style="display:block; text-decoration:none; text-align:center; padding:14px; margin-bottom:10px;">
+    ✏️ Edit Profile
+  </a>
 
-</div>
-</div>
-
-        <div class="bottom-nav">
-
-    <a href="${pageContext.request.contextPath}/frontend/dashboard.jsp" class="nav-item">
-        <span>🏠</span>
-        <small>Home</small>
-    </a>
-
-    <a href="${pageContext.request.contextPath}/LoadSessions" class="nav-item">
-        <span>📅</span>
-        <small>Booking</small>
-    </a>
-        <a href="${pageContext.request.contextPath}/myBookings" class="nav-item">
-        <span>📋</span>
-        <small>My Bookings</small>
-    </a>
-
-    <a href="${pageContext.request.contextPath}/frontend/payment.jsp" class="nav-item">
-        <span>💳</span>
-        <small>Payment</small>
-    </a>
-
-    <a href="${pageContext.request.contextPath}/frontend/profile.jsp" class="nav-item">
-        <span>👤</span>
-        <small>Profile</small>
-    </a>
+  <a href="${pageContext.request.contextPath}/frontend/login.jsp"
+     class="btn btn-danger" style="display:block; text-decoration:none; text-align:center; padding:14px;">
+    🚪 Logout
+  </a>
 
 </div>
-    </body>
+
+</body>
 </html>
